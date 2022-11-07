@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require('cors');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 
 app.get('/', (req, res) =>{
@@ -20,8 +21,34 @@ const users = [
     {id:4, name:'player4', email:'player4@gmail.com'},
 ]
 
+// username = dbuser1
+// password = w5mUwlEfR9hphL45
+
+
+
+
+const uri = "mongodb+srv://dbuser1:w5mUwlEfR9hphL45@cluster0.90qadcl.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+client.connect(err => {
+  const collection = client.db("simpleNode").collection("users");
+  // perform actions on the collection object
+  console.log('database connected')
+  client.close();
+});
+
+
+
 app.get('/users', (req,res) =>{
-    res.send(users);
+    if(req.query.name){
+        //filter users by query
+        const search = req.query.name;
+        const filtered = users.filter(usr => usr.name.includes(search));
+        res.send(filtered);
+    }else{
+
+        res.send(users);
+    }
+    
 })
 
 app.post('/users', (req, res) =>{
@@ -37,7 +64,12 @@ app.post('/users', (req, res) =>{
     res.send(users);
 })
 
-
+// app.delete('/users', (req, res) =>{
+//     const dltUser = req.body.deleteUser;
+//     const remain = users.filter(user => user.email !== dltUser);
+//     console.log(remain)
+//     res.send(remain)
+// })
 
 app.listen(port, () =>{
     console.log(`Simple node server running on port: ${port}`);

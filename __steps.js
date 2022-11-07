@@ -9,3 +9,20 @@ POST
 6. use express.json as middleware to get the req data otherwise it will be undefiled.
 
 */
+
+/* 
+Query
+https://www.youtube.com/watch?v=Ha00SM7KAEI
+path?name=value&name=value&name=value
+
+*/
+
+
+/* 
+MongoDB
+1. Sign up in mongodb atlas
+2. create db user
+3. whitelist your ip address
+4. database > connect> show entire code
+5. npm install mongodb
+*/

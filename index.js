@@ -25,9 +25,19 @@ app.get('/users', (req,res) =>{
 })
 
 app.post('/users', (req, res) =>{
-    console.log("Post API Called")
-    console.log(req.body)
+    // console.log("Post API Called")
+    
+    const user = req.body;
+    user.id = users.length + 1;
+    users.push(user);
+
+    console.log(req.body);
+    console.log(user);
+
+    res.send(users);
 })
+
+
 
 app.listen(port, () =>{
     console.log(`Simple node server running on port: ${port}`);

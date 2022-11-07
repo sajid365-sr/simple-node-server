@@ -29,12 +29,36 @@ const users = [
 
 const uri = "mongodb+srv://dbuser1:w5mUwlEfR9hphL45@cluster0.90qadcl.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("simpleNode").collection("users");
-  // perform actions on the collection object
-  console.log('database connected')
-  client.close();
-});
+
+async function run(){
+    try{
+        const userCollection = client.db('simpleNode').collection('users');
+        const user = {name:'Abbas Ali', email:'aliabbas@gmail.com'};
+        const user2 = {name:'Jobbar Ali', email:'alijobbar@gmail.com'};
+        // const result = await userCollection.insertOne(user2);
+        // console.log(result)
+
+        app.post('/users', async(req, res) =>{
+            // console.log("Post API Called")
+            
+            const user = req.body;
+            const result = await userCollection.insertOne(user);
+            user.id = result.insertedId;
+
+            console.log(result);
+            // users.push(user);
+            // console.log(user);
+        
+            res.send(user);
+        })
+
+    }finally{
+
+    }
+
+}
+
+run().catch( (e) =>{console.error(e)});
 
 
 
@@ -51,25 +75,20 @@ app.get('/users', (req,res) =>{
     
 })
 
-app.post('/users', (req, res) =>{
-    // console.log("Post API Called")
+// app.post('/users', (req, res) =>{
+//     // console.log("Post API Called")
     
-    const user = req.body;
-    user.id = users.length + 1;
-    users.push(user);
+//     const user = req.body;
+//     user.id = users.length + 1;
+//     users.push(user);
 
-    console.log(req.body);
-    console.log(user);
+//     console.log(req.body);
+//     console.log(user);
 
-    res.send(users);
-})
-
-// app.delete('/users', (req, res) =>{
-//     const dltUser = req.body.deleteUser;
-//     const remain = users.filter(user => user.email !== dltUser);
-//     console.log(remain)
-//     res.send(remain)
+//     res.send(users);
 // })
+
+
 
 app.listen(port, () =>{
     console.log(`Simple node server running on port: ${port}`);
